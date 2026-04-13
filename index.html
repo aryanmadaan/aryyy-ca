@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>builds by aryyy</title>
+<link rel="icon" type="image/svg+xml" href="aryyy-logo.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;color:#fff;font-family:'Space Mono',ui-monospace,Menlo,monospace;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{
+ background-image:radial-gradient(circle,#1f1f1f 1px,transparent 1px);
+ background-size:22px 22px;
+}
+.wrap{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:44px 24px 36px;max-width:1200px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:900px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{height:52px;width:auto;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.logo img{height:100%;width:auto;display:block}
+.brand-t{display:flex;flex-direction:column;gap:3px}
+.mark{font-size:11px;letter-spacing:2px;font-weight:700;color:#fff;line-height:1;text-transform:lowercase}
+.mark-sub{font-size:8.5px;letter-spacing:2px;color:#555;line-height:1;text-transform:uppercase}
+.status{font-size:10px;letter-spacing:2.5px;color:#555;display:flex;align-items:center;gap:8px}
+.status::before{content:"";width:5px;height:5px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80}
+.hero{text-align:center;margin:auto 0;width:100%;padding:60px 0 10px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.eyebrow{font-size:10px;letter-spacing:6px;color:#666;font-weight:400;margin-bottom:42px}
+.headline{font-family:'Space Mono',monospace;font-weight:700;font-size:clamp(56px,13vw,170px);line-height:.92;letter-spacing:-.02em;color:#fff;text-transform:lowercase}
+.headline div+div{margin-top:4px}
+.subline{margin-top:36px;font-size:11px;letter-spacing:5px;color:#888;font-weight:400;text-transform:uppercase}
+.gate{margin-top:46px;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:520px;margin-left:auto;margin-right:auto}
+.gate-row{display:flex;gap:8px;width:100%}
+.gate input{flex:1;background:#0a0a0a;border:1px solid #222;color:#fff;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;padding:18px 20px;text-transform:uppercase;outline:none;transition:border-color .25s}
+.gate input:focus{border-color:#4ade80}
+.gate input::placeholder{color:#444;letter-spacing:3px}
+.gate button{background:#fff;color:#000;border:none;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;font-weight:700;padding:18px 36px;cursor:pointer;transition:all .25s;text-transform:uppercase;white-space:nowrap}
+.gate button:hover{background:#4ade80}
+.gate button:active{transform:scale(.98)}
+.gate-msg{font-size:10px;letter-spacing:2px;color:#555;text-transform:uppercase;height:14px;transition:color .25s}
+.gate-msg.err{color:#ef4444;animation:shake .35s cubic-bezier(.36,.07,.19,.97)}
+.gate-msg.ok{color:#4ade80}
+@keyframes shake{10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+.gate button.gate-link{background:none!important;border:none!important;color:#555!important;font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;padding:6px 8px!important;margin-top:4px;transition:color .25s;width:auto;display:inline-block}
+.gate button.gate-link:hover{color:#4ade80!important;background:none!important}
+.tag{margin-top:22px;font-size:10px;letter-spacing:3px;color:#333;text-transform:uppercase}
+.req{display:none;flex-direction:column;gap:10px;width:100%;max-width:520px;margin:40px auto 0;padding:26px 24px;border:1px solid #222;background:#050505;animation:fadeup .35s ease both}
+.stage.req-mode .gate{display:none}
+.stage.req-mode .req{display:flex}
+.req-title{font-size:12px;letter-spacing:4px;font-weight:700;color:#fff;text-transform:uppercase}
+.req-sub{font-size:9.5px;letter-spacing:2px;color:#555;text-transform:uppercase;margin-bottom:8px}
+.req input{background:#0a0a0a;border:1px solid #222;color:#fff;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;padding:14px 16px;outline:none;transition:border-color .25s;text-transform:uppercase}
+.req input::placeholder{color:#333;letter-spacing:2px}
+.req input:focus{border-color:#4ade80}
+.req-actions{display:flex;gap:8px;margin-top:6px}
+.req-actions button{flex:1;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;font-weight:700;padding:14px;cursor:pointer;text-transform:uppercase;transition:all .25s;border:none}
+.btn-ghost{background:transparent;color:#666;border:1px solid #222!important}
+.btn-ghost:hover{color:#fff;border-color:#444!important}
+.btn-primary{background:#fff;color:#000}
+.btn-primary:hover{background:#4ade80}
+.btn-primary:disabled{opacity:.5;cursor:default}
+
+.stage.locked .portals{display:none}
+.stage.unlocked .gate{display:none}
+.stage.unlocked .hero{padding:60px 0 30px;flex:unset}
+.stage.unlocked .headline{font-size:clamp(44px,9vw,110px)}
+
+.portals{margin-top:40px;width:100%;max-width:720px;display:flex;flex-direction:column;gap:0;border-top:1px solid #1a1a1a;animation:fadeup .6s ease both}
+@keyframes fadeup{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+.portal{display:flex;align-items:center;justify-content:space-between;padding:22px 10px;border-bottom:1px solid #1a1a1a;text-decoration:none;color:#fff;transition:all .25s ease;position:relative}
+.portal::before{content:"";position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.03);transition:width .35s ease;pointer-events:none}
+.portal:hover::before{width:100%}
+.portal:hover{padding-left:22px}
+.portal:hover .p-arrow{transform:translateX(6px);color:#fff}
+.portal:hover .p-num{color:#4ade80}
+.portal-l{display:flex;align-items:baseline;gap:22px;position:relative;z-index:1}
+.p-num{font-size:10px;letter-spacing:2px;color:#555;font-weight:700;min-width:24px;transition:color .25s}
+.p-name{font-size:15px;letter-spacing:2.5px;font-weight:700;text-transform:uppercase}
+.p-dom{font-size:10px;letter-spacing:1.5px;color:#555;text-transform:lowercase}
+.portal-r{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
+.p-arrow{font-size:16px;color:#444;transition:all .25s ease;font-weight:400}
+.p-key{display:none}
+.portal.flash{background:rgba(74,222,128,.12);transition:background .25s}
+.portal.flash .p-key{border-color:#4ade80;color:#4ade80;background:#4ade80;color:#000}
+.dot{position:fixed;width:5px;height:5px;border-radius:50%;background:#4ade80;pointer-events:none;z-index:9999;mix-blend-mode:screen;box-shadow:0 0 12px #4ade80;opacity:.9;animation:dotFade 1s ease-out forwards}
+@keyframes dotFade{0%{transform:translate(-50%,-50%) scale(1);opacity:.9}100%{transform:translate(-50%,-50%) scale(.3);opacity:0}}
+.key-hint{display:none}
+.foot{width:100%;max-width:900px;display:flex;align-items:center;justify-content:space-between;font-size:9.5px;letter-spacing:3px;color:#444;text-transform:uppercase;margin-top:50px;padding-top:14px}
+.foot a{color:#666;text-decoration:none;transition:color .2s}
+.foot a:hover{color:#fff}
+
+@media(max-width:640px){
+ .wrap{padding:28px 16px}
+ .hero{padding:40px 0 10px}
+ .eyebrow{margin-bottom:26px;letter-spacing:4px}
+ .subline{margin-top:22px;letter-spacing:3px}
+ .gate{margin-top:30px}
+ .gate-row{flex-direction:column}
+ .gate input{width:100%}
+ .gate button{width:100%}
+ .portals{margin-top:28px}
+ .portal{padding:16px 6px}
+ .p-name{font-size:12px;letter-spacing:1.5px}
+ .portal-l{gap:14px}
+ .p-dom{display:none}
+ .foot{flex-direction:column;gap:10px;margin-top:34px}
+}
+</style>
+</head>
+<body>
+<div class="wrap stage locked" id="stage">
+
+  <div class="top">
+    <div class="brand">
+      <div class="logo"><img src="aryyy-logo.svg" alt="builds by aryyy"/></div>
+      <div class="brand-t">
+        <div class="mark">builds by aryyy</div>
+        <div class="mark-sub">COMMAND CENTER</div>
+      </div>
+    </div>
+    <div class="status">ALL SYSTEMS ONLINE</div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">COMMAND CENTER · V1</div>
+    <div class="headline">
+      <div>builds</div>
+      <div>by</div>
+      <div>aryyy</div>
+    </div>
+    <div class="subline">EVERY INTERNAL TOOL · ONE LAUNCHPAD · ACCESS REQUIRED</div>
+
+    <form class="gate" id="gate" autocomplete="off" onsubmit="return tryAccess(event)">
+      <div class="gate-row">
+        <input id="code" type="password" placeholder="ENTER ACCESS CODE" maxlength="32" spellcheck="false" inputmode="numeric"/>
+        <button type="submit">UNLOCK</button>
+      </div>
+      <div class="gate-msg" id="msg">&nbsp;</div>
+      <button type="button" class="gate-link" id="req-open">DON'T HAVE A CODE? → REQUEST ACCESS</button>
+    </form>
+
+    <form class="req" id="req-form" onsubmit="return sendRequest(event)" autocomplete="off">
+      <div class="req-title">REQUEST ACCESS</div>
+      <div class="req-sub">SEND A REQUEST TO ARYAN — HE'LL REPLY WITH A CODE</div>
+      <input id="req-name" type="text" placeholder="YOUR NAME" maxlength="60" required/>
+      <input id="req-email" type="email" placeholder="YOUR EMAIL" maxlength="120" required/>
+      <input id="req-note" type="text" placeholder="REASON (OPTIONAL)" maxlength="200"/>
+      <div class="req-actions">
+        <button type="button" class="btn-ghost" id="req-cancel">CANCEL</button>
+        <button type="submit" class="btn-primary" id="req-send">SEND REQUEST</button>
+      </div>
+      <div class="gate-msg" id="req-msg">&nbsp;</div>
+    </form>
+
+    <div class="tag">NO HUMANS REQUIRED</div>
+  </div>
+
+  <div class="portals" id="portals">
+
+    <a class="portal" href="https://dm6k7zmdp5s8p.cloudfront.net/" target="_blank" rel="noopener" data-key="1">
+      <div class="portal-l">
+        <span class="p-num">01</span>
+        <span class="p-name">VCCT FAO PORTAL</span>
+      </div>
+      <div class="portal-r">
+        <span class="p-dom">cloudfront temp</span>
+        <span class="p-key">1</span>
+        <span class="p-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="portal" href="https://analyst.vcct.ca" target="_blank" rel="noopener" data-key="2">
+      <div class="portal-l">
+        <span class="p-num">02</span>
+        <span class="p-name">VCCT ACADEMICS ANALYST</span>
+      </div>
+      <div class="portal-r">
+        <span class="p-dom">analyst.vcct.ca</span>
+        <span class="p-key">2</span>
+        <span class="p-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="portal" href="https://d2u6911e1taff0.cloudfront.net" target="_blank" rel="noopener" data-key="3">
+      <div class="portal-l">
+        <span class="p-num">03</span>
+        <span class="p-name">GRANVILLE ANALYST</span>
+      </div>
+      <div class="portal-r">
+        <span class="p-dom">granville portal</span>
+        <span class="p-key">3</span>
+        <span class="p-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="portal" href="https://d38y1f3zl08ina.cloudfront.net/" target="_blank" rel="noopener" data-key="4">
+      <div class="portal-l">
+        <span class="p-num">04</span>
+        <span class="p-name">OEG INTERVIEW PORTAL</span>
+      </div>
+      <div class="portal-r">
+        <span class="p-dom">oeg interviews</span>
+        <span class="p-key">4</span>
+        <span class="p-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="portal" href="https://fewodds.com" target="_blank" rel="noopener" data-key="5">
+      <div class="portal-l">
+        <span class="p-num">05</span>
+        <span class="p-name">LEDGE TEXT</span>
+      </div>
+      <div class="portal-r">
+        <span class="p-dom">fewodds.com</span>
+        <span class="p-key">5</span>
+        <span class="p-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="foot">
+    <div>© builds by aryyy · OPULENCE EDUCATION GROUP</div>
+    <div id="foot-r">ACCESS LOCKED</div>
+  </div>
+
+  <div class="key-hint">PRESS 1–5 TO LAUNCH · ESC TO LOCK</div>
+
+</div>
+
+<script>
+// ========================================================================
+// EDIT THIS LINE TO CHANGE THE ACCESS CODE
+// ========================================================================
+const ACCESS_CODE = "270700";
+const REQUEST_TO = "ryan@opulenceeducationgroup.com";
+const EMAIL_API = "https://ilmwf3ycv9.execute-api.ca-central-1.amazonaws.com/dev/send-email";
+// ========================================================================
+
+const STORAGE_KEY = "aryyy_hub_unlocked";
+const stage = document.getElementById("stage");
+const msgEl = document.getElementById("msg");
+const footR = document.getElementById("foot-r");
+const codeInput = document.getElementById("code");
+const reqOpen = document.getElementById("req-open");
+const reqCancel = document.getElementById("req-cancel");
+const reqForm = document.getElementById("req-form");
+const reqMsg = document.getElementById("req-msg");
+const reqName = document.getElementById("req-name");
+const reqEmail = document.getElementById("req-email");
+const reqNote = document.getElementById("req-note");
+const reqSend = document.getElementById("req-send");
+
+function unlock(){
+  stage.classList.remove("locked","req-mode");
+  stage.classList.add("unlocked");
+  footR.textContent = "ACCESS GRANTED";
+  footR.style.color = "#4ade80";
+  try { localStorage.setItem(STORAGE_KEY, "1"); } catch(e){}
+}
+
+function tryAccess(e){
+  e.preventDefault();
+  const val = (codeInput.value || "").trim();
+  if (!val) { showErr("ENTER A CODE"); return false; }
+  if (val === ACCESS_CODE) {
+    showOk("ACCESS GRANTED");
+    setTimeout(unlock, 450);
+  } else {
+    showErr("INVALID CODE · TRY AGAIN");
+    codeInput.value = "";
+  }
+  return false;
+}
+
+function showErr(m){ msgEl.textContent = m; msgEl.className = "gate-msg err"; }
+function showOk(m){ msgEl.textContent = m; msgEl.className = "gate-msg ok"; }
+function showReqErr(m){ reqMsg.textContent = m; reqMsg.className = "gate-msg err"; }
+function showReqOk(m){ reqMsg.textContent = m; reqMsg.className = "gate-msg ok"; }
+
+reqOpen.addEventListener("click",()=>{ stage.classList.add("req-mode"); reqName.focus(); });
+reqCancel.addEventListener("click",()=>{ stage.classList.remove("req-mode"); codeInput.focus(); reqMsg.textContent="\u00a0"; reqMsg.className="gate-msg"; });
+
+async function sendRequest(e){
+  e.preventDefault();
+  const name = (reqName.value||"").trim();
+  const email = (reqEmail.value||"").trim();
+  const note = (reqNote.value||"").trim();
+  if (!name || !email) { showReqErr("NAME AND EMAIL REQUIRED"); return false; }
+  reqSend.disabled = true; reqSend.textContent = "SENDING...";
+  showReqOk("\u00a0");
+  const subject = "Builds By Aryyy — Access Request from " + name;
+  const textBody = "Access request received for Builds By Aryyy Command Center.\n\n" +
+                   "Name:   " + name + "\n" +
+                   "Email:  " + email + "\n" +
+                   "Reason: " + (note || "—") + "\n\n" +
+                   "Time:   " + new Date().toISOString() + "\n" +
+                   "Page:   " + window.location.href + "\n\n" +
+                   "To grant access, reply to " + email + " with the access code.";
+  const htmlBody = '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#000;font-family:\'Space Mono\',monospace,Menlo,sans-serif;color:#fff">'+
+    '<div style="max-width:600px;margin:0 auto;padding:40px 28px">'+
+      '<div style="font-size:11px;letter-spacing:4px;color:#666;text-transform:uppercase;margin-bottom:8px">Builds · By · Aryyy</div>'+
+      '<div style="font-size:24px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:6px">New Access Request</div>'+
+      '<div style="font-size:11px;color:#888;letter-spacing:2px;text-transform:uppercase;margin-bottom:30px">COMMAND CENTER · V1</div>'+
+      '<div style="border:1px solid #222;padding:22px 24px;background:#0a0a0a">'+
+        '<table style="width:100%;border-collapse:collapse;font-size:12px;color:#fff;font-family:\'Space Mono\',monospace">'+
+          '<tr><td style="padding:8px 0;color:#666;letter-spacing:2px;font-size:10px;text-transform:uppercase;width:80px">NAME</td><td style="padding:8px 0;font-weight:700;letter-spacing:1px">'+escapeHtml(name)+'</td></tr>'+
+          '<tr><td style="padding:8px 0;color:#666;letter-spacing:2px;font-size:10px;text-transform:uppercase">EMAIL</td><td style="padding:8px 0"><a href="mailto:'+escapeHtml(email)+'" style="color:#4ade80;text-decoration:none">'+escapeHtml(email)+'</a></td></tr>'+
+          '<tr><td style="padding:8px 0;color:#666;letter-spacing:2px;font-size:10px;text-transform:uppercase">REASON</td><td style="padding:8px 0;color:#ccc">'+escapeHtml(note||"—")+'</td></tr>'+
+          '<tr><td style="padding:8px 0;color:#666;letter-spacing:2px;font-size:10px;text-transform:uppercase">TIME</td><td style="padding:8px 0;color:#888;font-size:11px">'+new Date().toLocaleString()+'</td></tr>'+
+        '</table>'+
+      '</div>'+
+      '<div style="margin-top:24px;padding:16px 20px;background:#0a0a0a;border:1px solid #1a1a1a;font-size:11px;color:#888;line-height:1.6">To grant access, reply to <a href="mailto:'+escapeHtml(email)+'" style="color:#4ade80;text-decoration:none">'+escapeHtml(email)+'</a> with the access code <strong style="color:#fff;letter-spacing:2px">'+ACCESS_CODE+'</strong> or a link: <a href="'+window.location.origin+window.location.pathname+'?code='+ACCESS_CODE+'" style="color:#4ade80">bookmark link</a></div>'+
+      '<div style="margin-top:28px;font-size:9px;letter-spacing:2px;color:#333;text-transform:uppercase;text-align:center">© BUILDS BY ARYYY · OPULENCE EDUCATION GROUP</div>'+
+    '</div></body></html>';
+  try {
+    const res = await fetch(EMAIL_API, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({toEmail: REQUEST_TO, subject, body: textBody, htmlBody})
+    });
+    const d = await res.json().catch(()=>({}));
+    if (res.ok && (d.success || d.MessageId || d.messageId)) {
+      showReqOk("✓ REQUEST SENT · ARYAN WILL REPLY SOON");
+      reqName.value = ""; reqEmail.value = ""; reqNote.value = "";
+      setTimeout(()=>{ stage.classList.remove("req-mode"); reqMsg.textContent="\u00a0"; reqMsg.className="gate-msg"; }, 2800);
+    } else {
+      showReqErr("FAILED · TRY AGAIN OR EMAIL DIRECTLY");
+    }
+  } catch(err) {
+    showReqErr("NETWORK ERROR · TRY AGAIN");
+  }
+  reqSend.disabled = false; reqSend.textContent = "SEND REQUEST";
+  return false;
+}
+
+function escapeHtml(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+
+// Auto-unlock if previously granted
+try { if (localStorage.getItem(STORAGE_KEY) === "1") unlock(); } catch(e){}
+
+// Allow ?code=XXX in URL for bookmark
+const urlCode = new URLSearchParams(window.location.search).get("code");
+if (urlCode && urlCode === ACCESS_CODE) unlock();
+
+// Focus input on load (locked state)
+if (stage.classList.contains("locked")) codeInput.focus();
+
+// Mouse dot trail removed
+
+// ========================================================================
+// KEYBOARD SHORTCUTS — 1–5 launch portals when unlocked, ESC locks
+// ========================================================================
+document.addEventListener("keydown", (e) => {
+  // ignore when typing in an input
+  const t = e.target;
+  if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+  if (stage.classList.contains("locked")) return;
+  if (e.key >= "1" && e.key <= "9") {
+    const portal = document.querySelector('.portal[data-key="' + e.key + '"]');
+    if (portal) {
+      e.preventDefault();
+      portal.classList.add("flash");
+      setTimeout(() => portal.classList.remove("flash"), 300);
+      window.open(portal.href, "_blank", "noopener");
+    }
+  } else if (e.key === "Escape") {
+    if (confirm("Lock access?")) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+      window.location.reload();
+    }
+  }
+});
+</script>
+</body>
+</html>
