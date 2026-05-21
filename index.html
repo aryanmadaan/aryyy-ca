@@ -30,29 +30,41 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* CINEMA BG */
-.cinema{position:fixed;inset:0;z-index:0;pointer-events:none;background:#000;overflow:hidden}
-.cinema-frame{
-  position:absolute;inset:0;
-  background-size:cover;background-position:center;
-  opacity:0;
-  filter:grayscale(75%) sepia(28%) contrast(1.08) brightness(.42);
-  animation:kenburns 24s ease-in-out infinite;
+/* VIDEO STRIP (border under nav) */
+.vstrip{
+  position:relative;flex-shrink:0;
+  height:130px;width:100%;overflow:hidden;
+  background:#000;border-bottom:1px solid var(--fg15);
+  z-index:2;
 }
-.cinema-frame.f1{animation-name:kenburns1,fade1}
-.cinema-frame.f2{animation-name:kenburns2,fade2}
-.cinema-frame.f3{animation-name:kenburns3,fade3}
-@keyframes kenburns1{0%{transform:scale(1.05) translate(-1%,-1%)}100%{transform:scale(1.18) translate(2%,1%)}}
-@keyframes kenburns2{0%{transform:scale(1.15) translate(2%,1%)}100%{transform:scale(1.02) translate(-2%,-1%)}}
-@keyframes kenburns3{0%{transform:scale(1.08) translate(0,2%)}100%{transform:scale(1.2) translate(-1%,-2%)}}
-@keyframes fade1{0%,30%{opacity:.85}40%,90%{opacity:0}100%{opacity:.85}}
-@keyframes fade2{0%,10%{opacity:0}20%,55%{opacity:.85}65%,100%{opacity:0}}
-@keyframes fade3{0%,35%{opacity:0}45%,85%{opacity:.85}95%,100%{opacity:0}}
-.cinema-vignette{
-  position:absolute;inset:0;
+.vstrip video{
+  position:absolute;top:50%;left:50%;
+  min-width:100%;min-height:100%;
+  width:auto;height:auto;
+  transform:translate(-50%,-50%);
+  filter:grayscale(45%) contrast(1.08) brightness(.7) saturate(.85);
+  opacity:.95;
+}
+.vstrip::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
   background:
-    radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.55) 75%,rgba(0,0,0,.85) 100%),
-    linear-gradient(180deg,rgba(0,0,0,.4) 0%,transparent 35%,transparent 65%,rgba(0,0,0,.6) 100%);
+    linear-gradient(90deg,rgba(0,0,0,.7) 0%,transparent 22%,transparent 78%,rgba(0,0,0,.7) 100%),
+    linear-gradient(180deg,rgba(0,0,0,.4) 0%,transparent 40%,transparent 60%,rgba(0,0,0,.5) 100%);
+}
+.vstrip-label{
+  position:absolute;left:32px;bottom:14px;z-index:3;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.22em;color:var(--fg);text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;
+}
+.vstrip-label::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:var(--red);
+  animation:pulse 1.4s ease-in-out infinite;box-shadow:0 0 8px var(--red);
+}
+.vstrip-ts{
+  position:absolute;right:32px;bottom:14px;z-index:3;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.18em;color:var(--fg50);text-transform:uppercase;
 }
 /* FILM GRAIN */
 .grain{
@@ -382,12 +394,6 @@ footer{
 </head>
 <body>
 
-<div class="cinema">
-  <div class="cinema-frame f1" style="background-image:url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=2000&q=80&auto=format')"></div>
-  <div class="cinema-frame f2" style="background-image:url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=2000&q=80&auto=format')"></div>
-  <div class="cinema-frame f3" style="background-image:url('https://images.unsplash.com/photo-1556761175-b413da4baf72?w=2000&q=80&auto=format')"></div>
-  <div class="cinema-vignette"></div>
-</div>
 <div class="grain"></div>
 <div class="scan"></div>
 <div class="scan-sweep"></div>
@@ -404,12 +410,20 @@ footer{
     <div class="nl">
       <img src="aryyy-logo.svg" alt=""/>
       <span class="nl-mark">ARYYY</span>
-      <span class="nl-tag">REV.07 // V6.3</span>
+      <span class="nl-tag">REV.07 // V6.4</span>
     </div>
     <div class="nr">
       <span class="nr-clock" id="clock">--:--:-- UTC</span>
     </div>
   </nav>
+
+  <div class="vstrip">
+    <video autoplay loop muted playsinline preload="auto">
+      <source src="typing.mp4" type="video/mp4"/>
+    </video>
+    <span class="vstrip-label">LIVE FEED &middot; KEYBOARD.CAM</span>
+    <span class="vstrip-ts" id="vts">--:--:--</span>
+  </div>
 
   <main>
     <div class="left parallax" id="paraLeft">
@@ -420,11 +434,6 @@ footer{
         <span class="dot"></span>
         <span>FY2026</span>
       </div>
-      <h1 class="hh" id="h1">
-        <span class="line"><span>BUILDING</span></span>
-        <span class="line"><span>INTERNAL TOOLS</span></span>
-        <span class="line"><span class="stroke">FOR EDUCATION.</span></span>
-      </h1>
       <p class="hsub" id="hsub">
         A single command center for the systems that move students through enrollment, financing, learning, and outcomes.
       </p>
@@ -553,18 +562,21 @@ gsap.to(pct,{v:100,duration:1.4,ease:"power2.inOut",
 function entrance(){
   const tl=gsap.timeline();
   tl.to("#eyebrow",{opacity:1,y:0,duration:.5,ease:"power2.out"})
-    .to(".hh .line span",{y:0,duration:.85,stagger:.08,ease:"power4.out"},"-=.3")
-    .to("#hsub",{opacity:1,y:0,duration:.55,ease:"power2.out"},"-=.4")
+    .to("#hsub",{opacity:1,y:0,duration:.55,ease:"power2.out"},"-=.2")
     .to(".gate-wrap",{opacity:1,y:0,duration:.55,ease:"power2.out"},"-=.4")
-    .to(".right",{opacity:1,y:0,duration:.7,ease:"power2.out"},"-=.6");
-
-  const h1=document.getElementById("h1");
-  setInterval(()=>{if(Math.random()<.35){h1.classList.add("glitch");setTimeout(()=>h1.classList.remove("glitch"),300)}},4500);
+    .to(".right",{opacity:1,y:0,duration:.7,ease:"power2.out"},"-=.5");
 }
 
-/* CLOCK */
-const clk=document.getElementById("clock");
-function tick(){const d=new Date();clk.textContent=String(d.getUTCHours()).padStart(2,"0")+":"+String(d.getUTCMinutes()).padStart(2,"0")+":"+String(d.getUTCSeconds()).padStart(2,"0")+" UTC"}
+/* CLOCK + VIDEO STRIP TIMESTAMP */
+const clk=document.getElementById("clock"),vts=document.getElementById("vts");
+function tick(){
+  const d=new Date();
+  const h=String(d.getUTCHours()).padStart(2,"0");
+  const m=String(d.getUTCMinutes()).padStart(2,"0");
+  const s=String(d.getUTCSeconds()).padStart(2,"0");
+  clk.textContent=h+":"+m+":"+s+" UTC";
+  if(vts)vts.textContent="REC "+h+":"+m+":"+s;
+}
 tick();setInterval(tick,1000);
 
 /* ACCESS */
