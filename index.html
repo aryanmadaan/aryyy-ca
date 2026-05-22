@@ -30,29 +30,36 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* VIDEO STRIP (border under nav) */
+/* VIDEO STRIP — cinematic bottom border (Contralabs pattern) */
+.vstrip-wrap{
+  flex-shrink:0;width:100%;
+  position:relative;
+}
 .vstrip{
-  position:relative;flex-shrink:0;
-  height:130px;width:100%;overflow:hidden;
-  background:#000;border-bottom:1px solid var(--fg15);
-  z-index:2;
+  position:relative;width:100%;
+  aspect-ratio:3.7/1;
+  max-height:clamp(140px,26vh,280px);
+  overflow:hidden;
+  background:#000;
 }
 .vstrip video{
-  position:absolute;top:50%;left:50%;
-  min-width:100%;min-height:100%;
-  width:auto;height:auto;
-  transform:translate(-50%,-50%);
-  filter:grayscale(45%) contrast(1.08) brightness(.7) saturate(.85);
-  opacity:.95;
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:50% 100%;
+  display:block;background:#000;
+}
+.vstrip::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:90px;
+  z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,#000 0%,rgba(0,0,0,.7) 40%,transparent 100%);
 }
 .vstrip::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    linear-gradient(90deg,rgba(0,0,0,.7) 0%,transparent 22%,transparent 78%,rgba(0,0,0,.7) 100%),
-    linear-gradient(180deg,rgba(0,0,0,.4) 0%,transparent 40%,transparent 60%,rgba(0,0,0,.5) 100%);
+  content:"";position:absolute;left:0;right:0;bottom:0;height:60px;z-index:2;pointer-events:none;
+  background:linear-gradient(0deg,rgba(0,0,0,.5) 0%,transparent 100%);
 }
 .vstrip-label{
-  position:absolute;left:32px;bottom:14px;z-index:3;
+  position:absolute;left:20px;bottom:12px;z-index:3;
   font-family:'JetBrains Mono',monospace;font-size:10px;
   letter-spacing:.22em;color:var(--fg);text-transform:uppercase;
   display:flex;align-items:center;gap:10px;
@@ -62,7 +69,7 @@ body{
   animation:pulse 1.4s ease-in-out infinite;box-shadow:0 0 8px var(--red);
 }
 .vstrip-ts{
-  position:absolute;right:32px;bottom:14px;z-index:3;
+  position:absolute;right:20px;bottom:12px;z-index:3;
   font-family:'JetBrains Mono',monospace;font-size:10px;
   letter-spacing:.18em;color:var(--fg50);text-transform:uppercase;
 }
@@ -154,8 +161,9 @@ nav{
 /* MAIN */
 main{
   flex:1;min-height:0;
-  display:grid;grid-template-columns:1fr 1fr;gap:60px;
-  padding:48px 56px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(24px,4vw,60px);
+  padding:clamp(20px,3vh,32px) clamp(20px,4vw,56px);
   max-width:1500px;width:100%;margin:0 auto;
   align-items:center;
 }
@@ -374,17 +382,23 @@ footer{
 .parallax{transition:transform .6s cubic-bezier(.2,.8,.2,1);will-change:transform}
 
 /* RESPONSIVE */
-@media(max-width:980px){
+@media(max-width:1100px){
+  .dep-name{font-size:18px}
+  .dep-row{grid-template-columns:46px 1fr 120px 24px;gap:18px}
+}
+@media(max-width:720px){
   html,body{overflow:auto}
   .stage{height:auto;min-height:100vh}
-  main{grid-template-columns:1fr;gap:40px;padding:32px 20px}
-  nav{padding:14px 20px}
-  footer{padding:14px 20px;flex-direction:column;gap:8px;text-align:center}
-  h1.hh{font-size:clamp(30px,8vw,46px)}
+  main{grid-template-columns:1fr;gap:32px;padding:28px 18px}
+  nav{padding:14px 18px}
+  footer{padding:14px 18px;flex-direction:column;gap:8px;text-align:center}
   .nl-tag{display:none}
   .scan{display:none}
-  .dep-name{font-size:14px}
+  .dep-name{font-size:15px}
   .dep-row{grid-template-columns:36px 1fr 110px 20px;gap:10px;padding:10px 8px}
+  .vstrip{aspect-ratio:5/2;max-height:none}
+  .vstrip-label,.vstrip-ts{font-size:9px;bottom:10px}
+  .vstrip-label{left:14px}.vstrip-ts{right:14px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -416,14 +430,6 @@ footer{
       <span class="nr-clock" id="clock">--:--:-- UTC</span>
     </div>
   </nav>
-
-  <div class="vstrip">
-    <video autoplay loop muted playsinline preload="auto">
-      <source src="typing.mp4" type="video/mp4"/>
-    </video>
-    <span class="vstrip-label">LIVE FEED &middot; KEYBOARD.CAM</span>
-    <span class="vstrip-ts" id="vts">--:--:--</span>
-  </div>
 
   <main>
     <div class="left parallax" id="paraLeft">
@@ -510,6 +516,16 @@ footer{
     </div>
   </main>
 
+  <div class="vstrip-wrap">
+    <div class="vstrip">
+      <video autoplay loop muted playsinline preload="auto" poster="" id="vstripVideo">
+        <source src="typing.mp4" type="video/mp4"/>
+      </video>
+      <span class="vstrip-label">LIVE FEED &middot; KEYBOARD.CAM</span>
+      <span class="vstrip-ts" id="vts">--:--:--</span>
+    </div>
+  </div>
+
   <footer>
     <span>&copy; 2026 ARYYY / OPULENCE EDUCATION GROUP</span>
     <span class="foot-status" id="fs">ACCESS LOCKED</span>
@@ -566,6 +582,17 @@ function entrance(){
     .to(".gate-wrap",{opacity:1,y:0,duration:.55,ease:"power2.out"},"-=.4")
     .to(".right",{opacity:1,y:0,duration:.7,ease:"power2.out"},"-=.5");
 }
+
+/* FORCE VIDEO PLAY (autoplay safety) */
+(function(){
+  const v=document.getElementById("vstripVideo");if(!v)return;
+  v.muted=true;v.defaultMuted=true;
+  const tryPlay=()=>{const p=v.play();if(p&&p.catch)p.catch(()=>{})};
+  v.addEventListener("loadeddata",tryPlay);
+  v.addEventListener("canplay",tryPlay);
+  document.addEventListener("click",tryPlay,{once:true});
+  tryPlay();
+})();
 
 /* CLOCK + VIDEO STRIP TIMESTAMP */
 const clk=document.getElementById("clock"),vts=document.getElementById("vts");
